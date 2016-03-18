@@ -13,7 +13,7 @@ public class WebCrawler {
     private static boolean showTrace;                   // (-t) show trace
 
     public static final String DISALLOW = "Disallow:";
-    public static final int MAXSIZE = 20000;            // Max size of file
+    public static final int MAXSIZE = 20000;            // Max size (# of bits) of a file that can be downloaded
 
     Vector<URL> newURLs;                                // URLs to be searched (and downloaded)
     Hashtable<URL,Integer> knownURLs;                   // Set of known URLs (already downloaded)
@@ -33,7 +33,7 @@ public class WebCrawler {
 
 
     // Crawler Loop: Keep popping a url off newURLs, download it, and accumulate new URLs
-    public void run(){
+    public void run() throws IOException {
 
         initialize();
 
@@ -48,6 +48,9 @@ public class WebCrawler {
 
             if(isRobotSafe(url)){
                 String page = downloadPage(url);
+                // write output to file
+                Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path_input + "/" + "filename.txt"), "utf-8"));
+                writer.write(page);
 
                 if(showTrace){ System.out.println(page); }
 
@@ -206,6 +209,7 @@ public class WebCrawler {
                     content += newContent;
                 }
             }
+
             return content;
 
         }catch (IOException e){

@@ -9,6 +9,8 @@ package com.yf833;
 //  is the maximum number of pages to download.
 
 
+import java.io.IOException;
+
 public class Main {
 
     private static String url_input;                // -u
@@ -19,7 +21,7 @@ public class Main {
 
 
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
 
         //get input values from string arguments
         getInput(args);
