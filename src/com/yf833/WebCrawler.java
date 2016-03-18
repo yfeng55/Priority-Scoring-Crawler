@@ -1,82 +1,113 @@
 package com.yf833;
-
 import java.util.*;
 import java.net.*;
 import java.io.*;
 
 
-
 public class WebCrawler {
 
+    private static String url_input;                    // (-u) starting url
+    private static String path_input;                   // (-docs) output path
+    private static String query_input;                  // (-q) query string
+    private static int maxPages;                        // (-m) max number of pages to download
+    private static boolean showTrace;                   // (-t) show trace
 
-    public static final int SEARCH_LIMIT = 20;  // Absolute max pages
-    public static final boolean DEBUG = false;
     public static final String DISALLOW = "Disallow:";
-    public static final int MAXSIZE = 20000; // Max size of file
+    public static final int MAXSIZE = 20000;            // Max size of file
+
+    Vector<URL> newURLs;                                // URLs to be searched (and downloaded)
+    Hashtable<URL,Integer> knownURLs;                   // Set of known URLs (already downloaded)
 
 
-    // URLs to be searched
-    Vector<URL> newURLs;
+    // constructor
+    public WebCrawler(String u, String docs, String q, int m, boolean t){
+        this.url_input = u;
+        this.path_input = docs;
+        this.query_input = q;
+        this.maxPages = m;
+        this.showTrace = t;
 
-    // Known URLs
-    Hashtable<URL,Integer> knownURLs;
-
-    // max number of pages to download
-    int maxPages;
-
-
-    // initializes data structures.  argv is the command line arguments.
-    public void initialize(String[] argv) {
-        URL url;
         knownURLs = new Hashtable<URL,Integer>();
         newURLs = new Vector<URL>();
-        try { url = new URL(argv[0]); }
-        catch (MalformedURLException e) {
-            System.out.println("Invalid starting URL " + argv[0]);
+    }
+
+
+    // Crawler Loop: Keep popping a url off newURLs, download it, and accumulate new URLs
+    public void run(){
+
+        initialize();
+
+        for (int i=0; i<maxPages; i++){
+
+            URL url = newURLs.elementAt(0);
+            newURLs.removeElementAt(0);
+
+            if(showTrace){
+                System.out.println("Searching " + url.toString());
+            }
+
+            if(isRobotSafe(url)){
+                String page = downloadPage(url);
+
+                if(showTrace){ System.out.println(page); }
+
+                if(page.length() != 0){
+                    processPage(url, page);
+                }
+                if(newURLs.isEmpty()){
+                    break;
+                }
+            }
+
+        }
+        System.out.println("Search complete.");
+
+    }
+
+
+    // initialize: set the starting point of the crawler; set proxy and port settings
+    private void initialize() {
+
+        URL url;
+        try{
+            url = new URL(url_input);
+        }catch (MalformedURLException e) {
+            System.out.println("Invalid starting URL " + url_input);
             return;
         }
-        knownURLs.put(url,new Integer(1));
-        newURLs.addElement(url);
-        System.out.println("Starting search: Initial URL " + url.toString());
-        maxPages = SEARCH_LIMIT;
-        if (argv.length > 1) {
-            int iPages = Integer.parseInt(argv[1]);
-            if (iPages < maxPages) maxPages = iPages; }
-        System.out.println("Maximum number of pages:" + maxPages);
 
+        knownURLs.put(url, new Integer(1));
+        newURLs.addElement(url);
+
+        System.out.println("Starting search: Initial URL " + url.toString());
 
         //Behind a firewall set your proxy and port here!
         Properties props= new Properties(System.getProperties());
         props.put("http.proxySet", "true");
         props.put("http.proxyHost", "webcache-cup");
         props.put("http.proxyPort", "8080");
-
         Properties newprops = new Properties(props);
         System.setProperties(newprops);
-        /////
+
     }
 
 
-    // Check that the robot exclusion protocol does not disallow
-    // downloading url.
-    public boolean robotSafe(URL url) {
+    // Check that the robot exclusion protocol does not disallow downloading url
+    private boolean isRobotSafe(URL url) {
         String strHost = url.getHost();
 
         // form URL of the robots.txt file
         String strRobot = "http://" + strHost + "/robots.txt";
         URL urlRobot;
-        try {
+        try{
             urlRobot = new URL(strRobot);
-        }
-        catch(MalformedURLException e){
-            // something weird is happening, so don't trust it
-            return false;
+        }catch(MalformedURLException e){
+            return false;                   // something weird is happening, so don't trust it
         }
 
-        if(DEBUG){
+        if(showTrace){
             System.out.println("Checking robot protocol " + urlRobot.toString());
         }
-
 
         String strCommands;
         try {
@@ -86,60 +117,52 @@ public class WebCrawler {
             byte b[] = new byte[1000];
             int numRead = urlRobotStream.read(b);
             strCommands = new String(b, 0, numRead);
-            while (numRead != -1) {
+
+            while (numRead != -1){
                 numRead = urlRobotStream.read(b);
-                if (numRead != -1) {
+                if(numRead != -1){
                     String newCommands = new String(b, 0, numRead);
                     strCommands += newCommands;
                 }
             }
             urlRobotStream.close();
-        }
-        catch(IOException e){
-            // if there is no robots.txt file, it is OK to search
-            return true;
+
+        }catch(IOException e){
+            return true;                    // if there is no robots.txt file, it is OK to search
         }
 
-
-        if(DEBUG){
+        if(showTrace){
             System.out.println(strCommands);
         }
 
-
-        // assume that this robots.txt refers to us and
-        // search for "Disallow:" commands.
+        // assume that this robots.txt refers to us and search for "Disallow:" commands.
         String strURL = url.getFile();
         int index = 0;
+
         while ((index = strCommands.indexOf(DISALLOW, index)) != -1){
             index += DISALLOW.length();
             String strPath = strCommands.substring(index);
             StringTokenizer st = new StringTokenizer(strPath);
 
-            if (!st.hasMoreTokens())
-                break;
-
+            if (!st.hasMoreTokens()){ break; }
             String strBadPath = st.nextToken();
 
             // if the URL starts with a disallowed path, it is not safe
-            if (strURL.indexOf(strBadPath) == 0)
-                return false;
+            if (strURL.indexOf(strBadPath) == 0){ return false; }
         }
-
 
         return true;
     }
 
 
 
-
-    // adds new URL to the queue. Accept only new URL's that end in
-    // htm or html. oldURL is the context, newURLString is the link
-    // (either an absolute or a relative URL).
-    public void addnewurl(URL oldURL, String newUrlString){
+    // adds new URL to the queue. Accept only new URL's that end in htm or html
+    // oldURL is the context, newURLString is the link (either an absolute or a relative URL)
+    private void addNewURL(URL oldURL, String newUrlString){
 
         URL url;
 
-        if (DEBUG) System.out.println("URL String " + newUrlString);
+        if (showTrace) System.out.println("URL String " + newUrlString);
 
         try { url = new URL(oldURL,newUrlString);
             if (!knownURLs.containsKey(url)) {
@@ -159,10 +182,8 @@ public class WebCrawler {
     }
 
 
-
-
     // Download contents of URL
-    public String getpage(URL url){
+    private String downloadPage(URL url){
 
         try{
             // try opening the URL
@@ -177,6 +198,7 @@ public class WebCrawler {
             byte b[] = new byte[1000];
             int numRead = urlStream.read(b);
             String content = new String(b, 0, numRead);
+
             while ((numRead != -1) && (content.length() < MAXSIZE)) {
                 numRead = urlStream.read(b);
                 if (numRead != -1) {
@@ -199,7 +221,7 @@ public class WebCrawler {
     // by <a href=" ...   It ends with a close angle bracket, preceded
     // by a close quote, possibly preceded by a hatch mark (marking a
     // fragment, an internal page marker)
-    public void processpage(URL url, String page){
+    private void processPage(URL url, String page){
 
         String lcPage = page.toLowerCase(); // Page in lower case
 
@@ -219,33 +241,10 @@ public class WebCrawler {
                         if ((iHatchMark != -1) && (iHatchMark < iCloseQuote))
                             iEnd = iHatchMark;
                         String newUrlString = page.substring(iURL,iEnd);
-                        addnewurl(url, newUrlString);
+                        addNewURL(url, newUrlString);
                     } } }
             index = iEndAngle;
         }
-
-    }
-
-
-
-
-    // Top-level procedure. Keep popping a url off newURLs, download
-    // it, and accumulate new URLs
-    public void run(String[] argv){
-
-        initialize(argv);
-        for (int i = 0; i < maxPages; i++) {
-            URL url = newURLs.elementAt(0);
-            newURLs.removeElementAt(0);
-            if (DEBUG) System.out.println("Searching " + url.toString());
-            if (robotSafe(url)) {
-                String page = getpage(url);
-                if (DEBUG) System.out.println(page);
-                if (page.length() != 0) processpage(url,page);
-                if (newURLs.isEmpty()) break;
-            }
-        }
-        System.out.println("Search complete.");
 
     }
 

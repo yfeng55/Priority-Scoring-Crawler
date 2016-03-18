@@ -24,14 +24,10 @@ public class Main {
         //get input values from string arguments
         getInput(args);
 
-
-
-//        WebCrawler wc = new WebCrawler();
-//        wc.run(args);
-
+        WebCrawler crawler = new WebCrawler(url_input, path_input, query_input, maxPages, showTrace);
+        crawler.run();
 
     }
-
 
 
     private static void getInput(String[] args){
