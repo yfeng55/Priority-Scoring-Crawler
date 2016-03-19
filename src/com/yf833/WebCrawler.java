@@ -19,7 +19,7 @@ public class WebCrawler {
     public static final int MAXSIZE = 20000;            // Max size (# of bits) of a file that can be downloaded
 
     Vector<URL> newURLs;                                // URLs to be searched (and downloaded)
-    Hashtable<URL,Integer> knownURLs;                   // Set of known URLs (already downloaded)
+    HashSet<URL> knownURLs;                             // Set of known URLs (already downloaded)
 
 
     // constructor
@@ -30,7 +30,7 @@ public class WebCrawler {
         this.maxPages = m;
         this.showTrace = t;
 
-        knownURLs = new Hashtable<URL,Integer>();
+        knownURLs = new HashSet<URL>();
         newURLs = new Vector<URL>();
     }
 
@@ -83,7 +83,7 @@ public class WebCrawler {
             return;
         }
 
-        knownURLs.put(url, new Integer(1));
+        knownURLs.add(url);
         newURLs.addElement(url);
 
         System.out.println("Starting search: Initial URL " + url.toString());
@@ -111,12 +111,12 @@ public class WebCrawler {
         if (showTrace) System.out.println("URL String " + newUrlString);
 
         try { url = new URL(oldURL,newUrlString);
-            if (!knownURLs.containsKey(url)) {
+            if (!knownURLs.contains(url)) {
                 String filename =  url.getFile();
                 int iSuffix = filename.lastIndexOf("htm");
                 if ((iSuffix == filename.length() - 3) ||
                         (iSuffix == filename.length() - 4)) {
-                    knownURLs.put(url,new Integer(1));
+                    knownURLs.add(url);
                     newURLs.addElement(url);
                     System.out.println("Found new URL " + url.toString());
                 } }
