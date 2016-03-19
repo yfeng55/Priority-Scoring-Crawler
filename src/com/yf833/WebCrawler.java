@@ -170,7 +170,7 @@ public class WebCrawler {
 
         String lcPage = page.toLowerCase(); // Page in lower case
 
-        int index = 0; // position in page
+        int index = 0; // position in page (index of '<a' character)
         int iEndAngle, ihref, iURL, iCloseQuote, iHatchMark, iEnd;
 
         while((index = lcPage.indexOf("<a",index)) != -1) {
@@ -207,7 +207,7 @@ public class WebCrawler {
     }
 
 
-//    private int score(String link, String page, String query){
+//    private int score(String link, String page, String query, int linkstart, int linkend){
 //
 //        String link_text = Util.getLinkText(link);
 //        String url_text = Util.getHrefText(link);
@@ -254,7 +254,14 @@ public class WebCrawler {
 //
 //
 //        // CASE 4:
-//        //else ...
+//        int u = 0;
+//        int v = 0;
+//
+//        String link_plus_minus_fivewords = Util.getLinkText_Five(page, linkstart, linkend);
+//
+//
+//
+//
 //    }
 
 
