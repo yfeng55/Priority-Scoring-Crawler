@@ -8,11 +8,18 @@ Get Input from User ***
     (-t) A flag for generating a trace. This defaults to false
 
 
-Modify downloadPage() to write output to the specified directory 
-    > fix filenotfound exception when writing output 
+Modify downloadPage() to write output to the specified directory ***
+    > fix filenotfound exception when writing output ***
 
 
-Write a function that searches the page for keywords in the query 
+Write a score() function based on the provided pseudocode 
+
+Change the link queue to a priority queue where the priority is the link's score 
+
+
+
+
+
 
 
 
