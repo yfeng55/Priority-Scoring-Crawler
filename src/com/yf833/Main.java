@@ -31,12 +31,16 @@ public class Main {
         crawler.run();
 
 
+
+        // TESTS //
+
 //        System.out.println(Util.getHrefText("<a href=\"bla/bla.html\"> HELLO WORLD </a>"));
 //        System.out.println(Util.getLinkText("<a href=\"bla/bla.html\"> HELLO WORLD </a>"));
 
 
 //        String page = "a b c d e f g h <a href = 'asdf/asdf.html'>link</a> i j k l m n o p q r s t u v";
 //        System.out.println(Util.getLinkText_Five(page, 16, 52));
+
 
 
     }

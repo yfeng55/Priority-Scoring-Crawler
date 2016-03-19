@@ -12,13 +12,13 @@ Modify downloadPage() to write output to the specified directory ***
     > fix filenotfound exception when writing output ***
 
 
-Write a score() function based on the provided pseudocode 
+Write a score() function based on the provided pseudocode ***
     > write a helper function to extract text between link tags ***
     > write a helper function to extract href text in anchor tags ***
     
-    > write a helper function to get a string that's +/- five words around a substring 
-    > write a helper function to count the number of different words in query that occur in a page P 
+    > write a helper function to get a string that's +/- five words around a substring ***
     
+   
 
 Change the link queue to a priority queue where the priority is the link's score 
 

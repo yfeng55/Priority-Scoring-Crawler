@@ -207,62 +207,80 @@ public class WebCrawler {
     }
 
 
-//    private int score(String link, String page, String query, int linkstart, int linkend){
-//
-//        String link_text = Util.getLinkText(link);
-//        String url_text = Util.getHrefText(link);
-//
-//        String[] query_arr = query.split(" ");
-//
-//
-//        // CASE 1: if query is null, return 0
-//        if(query == null || query.isEmpty()){
-//            return 0;
-//        }
-//
-//
-//        // CASE 2: if any of the words in query are substrings of the link text
-//        // return k*50 where 50 is the # of query word substrings in the link text
-//        boolean linkTextContainsWords = false;
-//        int k = 0;
-//        for(String word : query_arr){
-//            // check if linkText contains any of the words in query_arr
-//            if(link_text.contains(word)){
-//                linkTextContainsWords = true;
-//                k++;
-//            }
-//        }
-//
-//        if(linkTextContainsWords){
-//            return k*50;
-//        }
-//
-//
-//        // CASE 3: if any of the words in query are a substring of the URL itself
-//        // return 40
-//        boolean urlContainsWords = false;
-//        for(String word : query_arr){
-//            // check if url contains any of the words in query_arr
-//            if(url_text.contains(word)){
-//                urlContainsWords = true;
-//            }
-//        }
-//        if(urlContainsWords){
-//            return 40;
-//        }
-//
-//
-//
-//        // CASE 4:
-//        int u = 0;
-//        int v = 0;
-//
-//        String link_plus_minus_fivewords = Util.getLinkText_Five(page, linkstart, linkend);
-//
-//
-//
-//
-//    }
+    private int score(String link, String page, String query, int linkstart, int linkend){
+
+        String link_text = Util.getLinkText(link);
+        String url_text = Util.getHrefText(link);
+
+        String[] query_arr = query.split(" ");
+
+
+        // CASE 1: if query is null, return 0
+        if(query == null || query.isEmpty()){
+            return 0;
+        }
+
+
+        // CASE 2: if any of the words in query are substrings of the link text
+        // return k*50 where 50 is the # of query word substrings in the link text
+        boolean linkTextContainsWords = false;
+        int k = 0;
+        for(String word : query_arr){
+            // check if linkText contains any of the words in query_arr
+            if(link_text.contains(word)){
+                linkTextContainsWords = true;
+                k++;
+            }
+        }
+
+        if(linkTextContainsWords){
+            return k*50;
+        }
+
+
+        // CASE 3: if any of the words in query are a substring of the URL itself
+        // return 40
+        boolean urlContainsWords = false;
+        for(String word : query_arr){
+            // check if url contains any of the words in query_arr
+            if(url_text.contains(word)){
+                urlContainsWords = true;
+            }
+        }
+        if(urlContainsWords){
+            return 40;
+        }
+
+
+
+        // CASE 4:
+        HashSet<String> u = new HashSet<String>();
+        HashSet<String> v = new HashSet<String>();
+
+        String link_plus_minus_fivewords = Util.getLinkText_Five(page, linkstart, linkend);
+
+        //calculate value of u
+        for(String word : query_arr){
+            if(link_plus_minus_fivewords.contains(word)){
+                u.add(word);
+            }
+        }
+
+        //calculate value of v
+        for(String word : query_arr){
+            if(page.contains(word)){
+                v.add(word);
+            }
+        }
+
+        //calculate the set v-u
+        v.removeAll(u);
+
+        return (4 * u.size()) + v.size();
+
+
+
+    }
 
 
 
