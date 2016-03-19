@@ -13,6 +13,8 @@ Modify downloadPage() to write output to the specified directory ***
 
 
 Write a score() function based on the provided pseudocode 
+    > write a helper function to extract text between link tags ***
+    
 
 Change the link queue to a priority queue where the priority is the link's score 
 

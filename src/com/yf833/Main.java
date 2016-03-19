@@ -11,6 +11,7 @@ package com.yf833;
 
 import java.io.IOException;
 
+
 public class Main {
 
     private static String url_input;                // -u
@@ -30,6 +31,7 @@ public class Main {
         crawler.run();
 
     }
+
 
 
     private static void getInput(String[] args){
