@@ -30,6 +30,10 @@ public class Main {
         WebCrawler crawler = new WebCrawler(url_input, path_input, query_input, maxPages, showTrace);
         crawler.run();
 
+
+//        System.out.println(Util.getHrefText("<a href=\"bla/bla.html\"> HELLO WORLD </a>"));
+//        System.out.println(Util.getLinkText("<a href=\"bla/bla.html\"> HELLO WORLD </a>"));
+
     }
 
 

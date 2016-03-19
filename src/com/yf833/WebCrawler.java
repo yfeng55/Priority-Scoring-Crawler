@@ -2,8 +2,6 @@ package com.yf833;
 import java.util.*;
 import java.net.*;
 import java.io.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 
@@ -211,42 +209,59 @@ public class WebCrawler {
 
 //    private int score(String link, String page, String query){
 //
-//        String link_text = getUrlText(link);
+//        String link_text = Util.getLinkText(link);
+//        String url_text = Util.getHrefText(link);
 //
 //        String[] query_arr = query.split(" ");
 //
+//
+//        // CASE 1: if query is null, return 0
 //        if(query == null || query.isEmpty()){
 //            return 0;
 //        }
 //
-//        // if any of the words in query are substrings of the link text
+//
+//        // CASE 2: if any of the words in query are substrings of the link text
 //        // return k*50 where 50 is the # of query word substrings in the link text
-//        for(word : query_arr){
-//            // check if linkText contains
+//        boolean linkTextContainsWords = false;
+//        int k = 0;
+//        for(String word : query_arr){
+//            // check if linkText contains any of the words in query_arr
+//            if(link_text.contains(word)){
+//                linkTextContainsWords = true;
+//                k++;
+//            }
+//        }
+//
+//        if(linkTextContainsWords){
+//            return k*50;
 //        }
 //
 //
-//        // if any of the words in query are a substring of the URL itself
+//        // CASE 3: if any of the words in query are a substring of the URL itself
 //        // return 40
+//        boolean urlContainsWords = false;
+//        for(String word : query_arr){
+//            // check if url contains any of the words in query_arr
+//            if(url_text.contains(word)){
+//                urlContainsWords = true;
+//            }
+//        }
+//        if(urlContainsWords){
+//            return 40;
+//        }
 //
 //
+//
+//        // CASE 4:
 //        //else ...
 //    }
 
 
-    private String getUrlText(String url){
 
-        String url_text = "";
 
-        Pattern titleFinder = Pattern.compile("<a[^>]*>(.*?)</a>", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
-        Matcher regexMatcher = titleFinder.matcher(url);
-        while (regexMatcher.find()) {
-            // matched text: regexMatcher.group(1)
-            url_text = regexMatcher.group(1);
-        }
 
-        return url_text;
-    }
+
 
 
 
