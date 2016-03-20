@@ -8,7 +8,7 @@ public class Link {
     private URL url;
     private int score;
 
-    public Link(int score, URL url){
+    public Link(URL url, int score){
         this.url = url;
         this.score = score;
     }

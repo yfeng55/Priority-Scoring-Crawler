@@ -20,8 +20,9 @@ Write a score() function based on the provided pseudocode ***
     
    
 
-Change the link queue to a priority queue where the priority is the link's score 
+Change the link queue to a priority queue where the priority is the link's score ***
 
+Check that seen links aren't being re-added to the queue 
 
 
 

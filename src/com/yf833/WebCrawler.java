@@ -37,7 +37,7 @@ public class WebCrawler {
 
         initialize();   // add starting point url to the priorityqueue
 
-        while(!newURLs.isEmpty() && knownURLs.size()<maxPages){
+        while(!newURLs.isEmpty() && knownURLs.size()<=maxPages){
 
             Link link = newURLs.poll();
             if(showTrace){ System.out.println("\nDownloading: " + link.getURL().toString() + " Score = " + link.getScore()); }
@@ -50,7 +50,7 @@ public class WebCrawler {
                 // write output to file
                 File outputfile = new File(path_input + "/" + link.getURL().getPath() + ".html");
                 FileUtils.writeStringToFile(outputfile, page);
-                knownURLs.add(link.getURL());
+//                knownURLs.add(link.getURL());
 
 
                 if(page.length() != 0){ processPage(link, page); }
@@ -72,7 +72,7 @@ public class WebCrawler {
         Comparator<Link> comparator = new Comparator<Link>() {
             @Override
             public int compare(Link l1, Link l2) {
-                return (int) (l1.getScore() - l2.getScore());
+                return (int) (l2.getScore() - l1.getScore());
             }
         };
         newURLs = new PriorityQueue<Link>(11, comparator);
@@ -107,7 +107,7 @@ public class WebCrawler {
 
     // adds new URL to the queue. Accept only new URL's that end in htm or html
     // oldURL is the context, newURLString is the link (either an absolute or a relative URL)
-    private void addNewURL(Link link, String newUrlString){
+    private void addNewURL(Link link, String newUrlString, int score){
 
         URL url;
 //        if (showTrace) { System.out.println("URL String " + newUrlString); }
@@ -123,10 +123,11 @@ public class WebCrawler {
 
                 if ((iSuffix == filename.length() - 3) || (iSuffix == filename.length() - 4)) {
 
-                    System.out.println("Adding to queue: " + url.toString() + " Score = " + link.getScore());
-                    newURLs.add(new Link(url));
+                    System.out.println("Adding to queue: " + url.toString() + " Score = " + score);
+                    newURLs.add(new Link(url, score));
 
                 }
+                knownURLs.add(url);
 
             }
         }
@@ -209,8 +210,7 @@ public class WebCrawler {
                         //get the score of the link
                         String linkhtml = page.substring(index, anchorEnd);
                         int linkscore = score(linkhtml, page, query_input, index, anchorEnd);
-                        link.setScore(linkscore);
-                        addNewURL(link, newUrlString);
+                        addNewURL(link, newUrlString, linkscore);
                     }
                 }
             }
@@ -227,8 +227,8 @@ public class WebCrawler {
         //convert page to lowercase
         page = page.toLowerCase();
 
-        String link_text = Util.getLinkText(link);
-        String url_text = Util.getHrefText(link);
+        String link_text = Util.getLinkText(link.toLowerCase());
+        String url_text = Util.getHrefText(link.toLowerCase());
 
         String[] query_arr = query.split(" ");
 
