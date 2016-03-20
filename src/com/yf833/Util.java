@@ -45,10 +45,10 @@ public class Util {
         String[] leftthalf_page = page.substring(0, linkstart).split(" +");
         String[] righthalf_page = page.substring(linkend).split(" +");
 
-        for(int i=leftthalf_page.length-1; i>leftthalf_page.length-6; i--){
+        for(int i=leftthalf_page.length-1; i>leftthalf_page.length-6 && i>0; i--){
             result += leftthalf_page[i] + " ";
         }
-        for(int i=0; i<5; i++){
+        for(int i=0; i<5 && i<righthalf_page.length; i++){
             result += righthalf_page[i] + " ";
         }
 

@@ -345,9 +345,7 @@ public class WebCrawler {
             return true;                    // if there is no robots.txt file, it is OK to search
         }
 
-        if(showTrace){
-            System.out.println(strCommands);
-        }
+//        if(showTrace){ System.out.println(strCommands); }
 
         // assume that this robots.txt refers to us and search for "Disallow:" commands.
         String strURL = url.getFile();
