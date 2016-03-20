@@ -37,4 +37,11 @@ public class Link {
     }
 
 
+    public String toString(){
+        return "url: " + this.url + " " + "score: " + this.score + " " + " | ";
+
+
+    }
+
+
 }

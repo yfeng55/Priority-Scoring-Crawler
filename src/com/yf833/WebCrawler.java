@@ -146,9 +146,25 @@ public class WebCrawler {
 
                 if ((iSuffix == filename.length() - 3) || (iSuffix == filename.length() - 4)) {
 
-                    System.out.println("Adding " + score + " to score of " + url.toString());
+                    if(score > 0){ System.out.println("Adding " + score + " to score of " + url.toString()); }
+
+
+                    //find the link in the queue and get the old score
+                    int oldscore = 0;
+                    Link[] newURLs_arr = newURLs.toArray(new Link[newURLs.size()]);
+                    for(Link a : newURLs_arr){
+//                        System.out.print(a.toString());
+                        if(a.getURL().equals(url)){
+//                            System.out.println("OLD SCORE: " + a.getScore());
+                            oldscore = a.getScore();
+                        }
+                    }
+//                    System.out.println();
+
                     newURLs.remove(new Link(url, score, newURLs.size()));
-                    newURLs.add(new Link(url, score, newURLs.size()));
+
+
+                    newURLs.add(new Link(url, oldscore + score, newURLs.size()));
 
                 }
             }
