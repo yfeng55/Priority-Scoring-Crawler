@@ -22,6 +22,7 @@ public class WebCrawler {
     HashSet<URL> knownURLs;                             // Set of known URLs (already downloaded)
 
 
+
     // constructor
     public WebCrawler(String u, String docs, String q, int m, boolean t){
         this.url_input = u;
@@ -72,6 +73,11 @@ public class WebCrawler {
         Comparator<Link> comparator = new Comparator<Link>() {
             @Override
             public int compare(Link l1, Link l2) {
+
+                if (l1.getScore() == l2.getScore()) {
+                    return l1.getArrival() < l2.getArrival() ? -1 : 1;
+                }
+
                 return (int) (l2.getScore() - l1.getScore());
             }
         };
@@ -87,7 +93,7 @@ public class WebCrawler {
         }
 
         knownURLs.add(url);
-        newURLs.add(new Link(url));
+        newURLs.add(new Link(url, newURLs.size()));
 
         System.out.println("Starting search: Initial URL " + url.toString());
 
@@ -124,7 +130,7 @@ public class WebCrawler {
                 if ((iSuffix == filename.length() - 3) || (iSuffix == filename.length() - 4)) {
 
                     System.out.println("Adding to queue: " + url.toString() + " Score = " + score);
-                    newURLs.add(new Link(url, score));
+                    newURLs.add(new Link(url, score, newURLs.size()));
 
                 }
                 knownURLs.add(url);
