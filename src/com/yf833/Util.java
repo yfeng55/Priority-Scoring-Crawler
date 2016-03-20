@@ -45,11 +45,24 @@ public class Util {
         String[] leftthalf_page = page.substring(0, linkstart).split(" +");
         String[] righthalf_page = page.substring(linkend).split(" +");
 
-        for(int i=leftthalf_page.length-1; i>leftthalf_page.length-6 && i>0; i--){
-            result += leftthalf_page[i] + " ";
+
+        int i=leftthalf_page.length-1; int icount=0;
+        while(icount<5 && i>0){
+            if(leftthalf_page[i].matches("^[a-zA-Z0-9_)(\n]+$") && !leftthalf_page[i].equals("\n")){
+                result += leftthalf_page[i] + " ";
+                icount++;
+            }
+            i--;
         }
-        for(int i=0; i<5 && i<righthalf_page.length; i++){
-            result += righthalf_page[i] + " ";
+
+
+        int j=0; int jcount=0;
+        while(jcount<5 && j<righthalf_page.length){
+            if(righthalf_page[j].matches("^[a-zA-Z0-9_)(\n]+$") && !leftthalf_page[i].equals("\n")){
+                result += righthalf_page[j] + " ";
+                jcount++;
+            }
+            j++;
         }
 
         return result;

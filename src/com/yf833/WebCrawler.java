@@ -40,7 +40,7 @@ public class WebCrawler {
         while(!newURLs.isEmpty() && knownURLs.size()<maxPages){
 
             Link link = newURLs.poll();
-            if(showTrace){ System.out.println("Downloading: " + link.getURL().toString() + " Score: " + link.getScore()); }
+            if(showTrace){ System.out.println("\nDownloading: " + link.getURL().toString() + " Score = " + link.getScore()); }
 
             if(isRobotSafe(link.getURL())){
 
@@ -59,7 +59,8 @@ public class WebCrawler {
             }
 
         }
-        System.out.println("Search complete.");
+
+//        System.out.println("Search complete.");
 
     }
 
@@ -109,7 +110,7 @@ public class WebCrawler {
     private void addNewURL(Link link, String newUrlString){
 
         URL url;
-        if (showTrace) { System.out.println("URL String " + newUrlString); }
+//        if (showTrace) { System.out.println("URL String " + newUrlString); }
 
         try {
 
@@ -122,10 +123,9 @@ public class WebCrawler {
 
                 if ((iSuffix == filename.length() - 3) || (iSuffix == filename.length() - 4)) {
 
-//                    knownURLs.add(url);
+                    System.out.println("Adding to queue: " + url.toString() + " Score = " + link.getScore());
                     newURLs.add(new Link(url));
 
-                    System.out.println("Found new URL " + url.toString());
                 }
 
             }
@@ -143,7 +143,6 @@ public class WebCrawler {
         try{
             // try opening the URL
             URLConnection urlConnection = url.openConnection();
-//            System.out.println("Downloading " + url.toString());
 
             urlConnection.setAllowUserInteraction(false);
 
@@ -162,6 +161,7 @@ public class WebCrawler {
                 }
             }
 
+            System.out.println("Received: " + url);
             return content;
 
         }catch (IOException e){
@@ -223,6 +223,9 @@ public class WebCrawler {
 
 
     private int score(String link, String page, String query, int linkstart, int linkend){
+
+        //convert page to lowercase
+        page = page.toLowerCase();
 
         String link_text = Util.getLinkText(link);
         String url_text = Util.getHrefText(link);
@@ -319,9 +322,7 @@ public class WebCrawler {
             return false;                   // something weird is happening, so don't trust it
         }
 
-        if(showTrace){
-            System.out.println("Checking robot protocol " + urlRobot.toString());
-        }
+//        if(showTrace){ System.out.println("Checking robot protocol " + urlRobot.toString()); }
 
         String strCommands;
         try {
