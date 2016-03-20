@@ -21,7 +21,7 @@ public class WebCrawler {
     PriorityQueue<Link> newURLs;                         // URLs to be searched (and downloaded)
     HashSet<URL> knownURLs;                             // Set of known URLs (already downloaded)
 
-
+    public static int downloadedPages = 0;              // keep a count of how many pages have been downlaoded
 
     // constructor
     public WebCrawler(String u, String docs, String q, int m, boolean t){
@@ -38,7 +38,7 @@ public class WebCrawler {
 
         initialize();   // add starting point url to the priorityqueue
 
-        while(!newURLs.isEmpty() && knownURLs.size()<=maxPages){
+        while(!newURLs.isEmpty() && downloadedPages<=maxPages){
 
             Link link = newURLs.poll();
             if(showTrace){ System.out.println("\nDownloading: " + link.getURL().toString() + " Score = " + link.getScore()); }
@@ -51,8 +51,7 @@ public class WebCrawler {
                 // write output to file
                 File outputfile = new File(path_input + "/" + link.getURL().getPath() + ".html");
                 FileUtils.writeStringToFile(outputfile, page);
-//                knownURLs.add(link.getURL());
-
+                downloadedPages++;
 
                 if(page.length() != 0){ processPage(link, page); }
 
