@@ -27,7 +27,10 @@ public class Main {
         //get input values from string arguments
         getInput(args);
 
-        System.out.println("Crawling for " + maxPages + " pages relevant to \"" + query_input + "\" starting from " + url_input);
+        if(showTrace){
+            System.out.println("Crawling for " + maxPages + " pages relevant to \"" + query_input + "\" starting from " + url_input);
+        }
+
 
         WebCrawler crawler = new WebCrawler(url_input, path_input, query_input, maxPages, showTrace);
         crawler.run();

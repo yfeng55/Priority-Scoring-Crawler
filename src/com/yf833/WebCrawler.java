@@ -133,7 +133,9 @@ public class WebCrawler {
 
                 if ((iSuffix == filename.length() - 3) || (iSuffix == filename.length() - 4)) {
 
-                    System.out.println("Adding to queue: " + url.toString() + " Score = " + score);
+                    if(showTrace){
+                        System.out.println("Adding to queue: " + url.toString() + " Score = " + score);
+                    }
                     newURLs.add(new Link(url, score, newURLs.size()));
 
                 }
@@ -146,7 +148,7 @@ public class WebCrawler {
 
                 if ((iSuffix == filename.length() - 3) || (iSuffix == filename.length() - 4)) {
 
-                    if(score > 0){ System.out.println("Adding " + score + " to score of " + url.toString()); }
+                    if(score > 0 && showTrace){ System.out.println("Adding " + score + " to score of " + url.toString()); }
 
 
                     //find the link in the queue and get the old score
@@ -202,7 +204,9 @@ public class WebCrawler {
                 }
             }
 
-            System.out.println("Received: " + url);
+            if(showTrace){
+                System.out.println("Received: " + url);
+            }
             return content;
 
         }catch (IOException e){
