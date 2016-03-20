@@ -318,38 +318,63 @@ public class WebCrawler {
         String link_plus_minus_fivewords = Util.getLinkText_Five(page, linkstart, linkend);
 
         //calculate value of u
-        for(String word : query_arr){
-            if(link_plus_minus_fivewords.contains(word)){
+        for(String queryterm : query_arr){
 
-                //check that word is not a substring of another word
-                int start_index = link_plus_minus_fivewords.indexOf(word);
-                int end_index = start_index + word.length();
-                char nextChar = link_plus_minus_fivewords.charAt(end_index);
+            // Check all occurrences of the word, not just first occurrence //
 
-                if(nextChar == ' ' || nextChar == '\n' || nextChar == ',' || nextChar == ';' || nextChar == '.' || nextChar == ')'){
-                    u.add(word);
+            String[] link_plus__minus_fivewords_arr = link_plus_minus_fivewords.split(" +");
+            for(String word : link_plus__minus_fivewords_arr){
+
+                if(word.contains(queryterm)){
+
+                    //check that word is not a substring of another word
+                    char nextChar;
+                    if(queryterm.length() != word.length()){
+                        nextChar = word.charAt(queryterm.length());
+                    }else{
+                        nextChar = ' ';
+                    }
+
+//                    System.out.println("queryterm: " + queryterm + " | word: " + word + " | nextChar: " + nextChar);
+
+                    if(nextChar == ' ' || nextChar == '\n' || nextChar == ',' || nextChar == ';' || nextChar == '.' || nextChar == ')'){
+                        u.add(queryterm);
+                    }
+
                 }
 
             }
+
+
         }
 
         String parsed_page = Jsoup.parse(page).text();
 
         //calculate value of v
-        for(String word : query_arr){
-            if(parsed_page.contains(word)){
+        for(String queryterm : query_arr){
 
-                //check that word is not a substring of another word
-                int start_index = parsed_page.indexOf(word);
-                int end_index = start_index + word.length();
-                char nextChar = parsed_page.charAt(end_index);
+            // Check all occurrences of the word //
 
-                if(nextChar == ' ' || nextChar == '\n' || nextChar == ',' || nextChar == ';' || nextChar == '.' || nextChar == ')'){
-                    v.add(word);
+            String[] parsed_page_arr = parsed_page.split(" +");
+            for(String word : parsed_page_arr){
+                if(word.contains(queryterm)){
+
+                    //check that word is not a substring of another word
+                    char nextChar;
+                    if(queryterm.length() != word.length()){
+                        nextChar = word.charAt(queryterm.length());
+                    }else{
+                        nextChar = ' ';
+                    }
+
+                    if(nextChar == ' ' || nextChar == '\n' || nextChar == ',' || nextChar == ';' || nextChar == '.' || nextChar == ')'){
+                        v.add(queryterm);
+                    }
+
                 }
-
-
             }
+
+
         }
 
         //calculate the set v-u
