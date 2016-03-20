@@ -1,4 +1,6 @@
 package com.yf833;
+import org.jsoup.Jsoup;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,26 +44,25 @@ public class Util {
 
         String result = "";
 
-        String[] leftthalf_page = page.substring(0, linkstart).split(" +");
-        String[] righthalf_page = page.substring(linkend).split(" +");
+        String lefthalf = Jsoup.parse(page.substring(0, linkstart)).text();
+        String righthalf = Jsoup.parse(page.substring(linkend)).text();
+
+        String[] lefthalf_page = lefthalf.split(" +");
+        String[] righthalf_page = righthalf.split(" +");
 
 
-        int i=leftthalf_page.length-1; int icount=0;
+        int i=lefthalf_page.length-1; int icount=0;
         while(icount<5 && i>0){
-            if(leftthalf_page[i].matches("^[a-zA-Z0-9_)(\n]+$") && !leftthalf_page[i].equals("\n")){
-                result += leftthalf_page[i] + " ";
-                icount++;
-            }
+            result += lefthalf_page[i] + " ";
+            icount++;
             i--;
         }
 
 
         int j=0; int jcount=0;
         while(jcount<5 && j<righthalf_page.length){
-            if(righthalf_page[j].matches("^[a-zA-Z0-9_)(\n]+$") && !leftthalf_page[i].equals("\n")){
-                result += righthalf_page[j] + " ";
-                jcount++;
-            }
+            result += righthalf_page[j] + " ";
+            jcount++;
             j++;
         }
 

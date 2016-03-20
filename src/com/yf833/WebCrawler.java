@@ -4,7 +4,7 @@ import java.net.*;
 import java.io.*;
 
 import org.apache.commons.io.FileUtils;
-
+import org.jsoup.Jsoup;
 
 
 public class WebCrawler {
@@ -287,19 +287,30 @@ public class WebCrawler {
         //calculate value of u
         for(String word : query_arr){
             if(link_plus_minus_fivewords.contains(word)){
-                u.add(word);
+
+                //check that word is not a substring of another word
+                int start_index = link_plus_minus_fivewords.indexOf(word);
+                int end_index = start_index + word.length();
+                char nextChar = link_plus_minus_fivewords.charAt(end_index);
+
+                if(nextChar == ' ' || nextChar == '\n' || nextChar == ',' || nextChar == ';' || nextChar == '.'){
+                    u.add(word);
+                }
+
             }
         }
 
+        String parsed_page = Jsoup.parse(page).text();
+
         //calculate value of v
         for(String word : query_arr){
-            if(page.contains(word)){
+            if(parsed_page.contains(word)){
 
-                int start_index = page.indexOf(word);
-                int end_index = start_index + word.length();
-
-                char nextChar = page.charAt(end_index);
                 //check that word is not a substring of another word
+                int start_index = parsed_page.indexOf(word);
+                int end_index = start_index + word.length();
+                char nextChar = parsed_page.charAt(end_index);
+
                 if(nextChar == ' ' || nextChar == '\n' || nextChar == ',' || nextChar == ';' || nextChar == '.'){
                     v.add(word);
                 }
