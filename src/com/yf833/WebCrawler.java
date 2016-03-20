@@ -38,7 +38,7 @@ public class WebCrawler {
 
         initialize();   // add starting point url to the priorityqueue
 
-        while(!newURLs.isEmpty() && downloadedPages<=maxPages){
+        while(!newURLs.isEmpty() && downloadedPages<maxPages){
 
             Link link = newURLs.poll();
             if(showTrace){ System.out.println("\nDownloading: " + link.getURL().toString() + " Score = " + link.getScore()); }
@@ -292,7 +292,17 @@ public class WebCrawler {
         //calculate value of v
         for(String word : query_arr){
             if(page.contains(word)){
-                v.add(word);
+
+                int start_index = page.indexOf(word);
+                int end_index = start_index + word.length();
+
+                char nextChar = page.charAt(end_index);
+                //check that word is not a substring of another word
+                if(nextChar == ' ' || nextChar == '\n' || nextChar == ',' || nextChar == ';' || nextChar == '.'){
+                    v.add(word);
+                }
+
+
             }
         }
 
