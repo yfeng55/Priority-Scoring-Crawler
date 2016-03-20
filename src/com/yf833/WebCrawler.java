@@ -27,7 +27,7 @@ public class WebCrawler {
     public WebCrawler(String u, String docs, String q, int m, boolean t){
         this.url_input = u;
         this.path_input = docs;
-        this.query_input = q;
+        this.query_input = q.toLowerCase();
         this.maxPages = m;
         this.showTrace = t;
     }
@@ -53,7 +53,9 @@ public class WebCrawler {
                 FileUtils.writeStringToFile(outputfile, page);
                 downloadedPages++;
 
-                if(page.length() != 0){ processPage(link, page); }
+                if(page.length() != 0 && downloadedPages<maxPages){
+                    processPage(link, page);
+                }
 
 
             }
@@ -94,7 +96,7 @@ public class WebCrawler {
         knownURLs.add(url);
         newURLs.add(new Link(url, newURLs.size()));
 
-        System.out.println("Starting search: Initial URL " + url.toString());
+//        System.out.println("Starting search: Initial URL " + url.toString());
 
         //Behind a firewall set your proxy and port here!
         Properties props= new Properties(System.getProperties());
