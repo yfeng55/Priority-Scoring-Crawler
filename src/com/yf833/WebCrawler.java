@@ -20,6 +20,7 @@ public class WebCrawler {
 
     PriorityQueue<Link> newURLs;                         // URLs to be searched (and downloaded)
     HashSet<URL> knownURLs;                             // Set of known URLs (already downloaded)
+    HashSet<URL> downloadedURLs;
 
     public static int downloadedPages = 0;              // keep a count of how many pages have been downlaoded
 
@@ -52,6 +53,7 @@ public class WebCrawler {
                 File outputfile = new File(path_input + "/" + link.getURL().getPath() + ".html");
                 FileUtils.writeStringToFile(outputfile, page);
                 downloadedPages++;
+                downloadedURLs.add(link.getURL());
 
                 if(page.length() != 0 && downloadedPages<maxPages){
                     processPage(link, page);
@@ -71,6 +73,7 @@ public class WebCrawler {
     private void initialize() {
 
         knownURLs = new HashSet<URL>();
+        downloadedURLs = new HashSet<URL>();
         Comparator<Link> comparator = new Comparator<Link>() {
             @Override
             public int compare(Link l1, Link l2) {
@@ -137,6 +140,20 @@ public class WebCrawler {
                 knownURLs.add(url);
 
             }
+            else if(!downloadedURLs.contains(url)){
+                String filename =  url.getFile();
+                int iSuffix = filename.lastIndexOf("htm");
+
+                if ((iSuffix == filename.length() - 3) || (iSuffix == filename.length() - 4)) {
+
+                    System.out.println("Adding " + score + " to score of " + url.toString());
+                    newURLs.remove(new Link(url, score, newURLs.size()));
+                    newURLs.add(new Link(url, score, newURLs.size()));
+
+                }
+            }
+
+
         }
         catch(MalformedURLException e){
             return;
