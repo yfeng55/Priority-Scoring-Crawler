@@ -44,4 +44,13 @@ public class Link {
     }
 
 
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof Link){
+            Link compareto = (Link)o;
+            return compareto.url.equals(this.url);
+        }
+        return false;
+    }
+
 }

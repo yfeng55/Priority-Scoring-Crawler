@@ -326,7 +326,7 @@ public class WebCrawler {
                 int end_index = start_index + word.length();
                 char nextChar = link_plus_minus_fivewords.charAt(end_index);
 
-                if(nextChar == ' ' || nextChar == '\n' || nextChar == ',' || nextChar == ';' || nextChar == '.'){
+                if(nextChar == ' ' || nextChar == '\n' || nextChar == ',' || nextChar == ';' || nextChar == '.' || nextChar == ')'){
                     u.add(word);
                 }
 
@@ -344,7 +344,7 @@ public class WebCrawler {
                 int end_index = start_index + word.length();
                 char nextChar = parsed_page.charAt(end_index);
 
-                if(nextChar == ' ' || nextChar == '\n' || nextChar == ',' || nextChar == ';' || nextChar == '.'){
+                if(nextChar == ' ' || nextChar == '\n' || nextChar == ',' || nextChar == ';' || nextChar == '.' || nextChar == ')'){
                     v.add(word);
                 }
 
