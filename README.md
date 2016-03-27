@@ -1,6 +1,13 @@
+# Priority-Scoring Web Crawler
+A web crawler that prioritizes downloading pages whose content is relevant to the provided query. Scoring works as follows:
+* If any of the k words in q is a substring of the link text, then score = k*50.
+* If any words in q is a substring of m's URL then score = 40.
+* Else return 4*|U| + |V-U|
+    * U is the set of words in q that occur in p within five words of m
+    * V is the set of words in q that occur in p
 
-Get Input from User ***
 
+### Input Flags:
     (-u) A URL from which to start the crawl (presumably, a web page that deals with the subject)
     (-q) A query: a set of words, possibly null
     (-docs) A path name for a directory to save the downloaded pages
@@ -8,30 +15,25 @@ Get Input from User ***
     (-t) A flag for generating a trace. This defaults to false
 
 
-Modify downloadPage() to write output to the specified directory ***
-    > fix filenotfound exception when writing output ***
+---
 
 
-Write a score() function based on the provided pseudocode ***
-    > write a helper function to extract text between link tags ***
-    > write a helper function to extract href text in anchor tags ***
-    
-    > write a helper function to get a string that's +/- five words around a substring ***
-    
-   
+### Instructions for compiling and running:
 
-Change the link queue to a priority queue where the priority is the link's score ***
+#### 1. Compiling:
+```sh
+javac -cp "./jars/*" *.java
+```
 
-Check that seen links aren't being re-added to the queue 
+#### 2. Runing:
+```sh
+java -cp ".:./jars/*" Main -u [starting url] -docs [output path] -q [query] -m [max pages] -t
+```
 
-
-
-
-
-
-
--------------------------------------------------------------------------------------------------------------------
-
+#### *Note: multiword queries must be put in quotations. For example:
+```sh
+-q “species whale whales”
+```
 
 
 

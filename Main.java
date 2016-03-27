@@ -1,12 +1,3 @@
-package com.yf833;
-
-// A minimal Web Crawler written in Java
-// Usage: From command line
-//     java WebCrawler <URL> [N]
-// ex: http://cs.nyu.edu/courses/spring16/CSCI-GA.2580-001/MarineMammal/
-
-//  where URL is the url to start the crawl, and N (optional)
-//  is the maximum number of pages to download.
 
 
 import java.io.IOException;
